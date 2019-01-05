@@ -7,7 +7,7 @@ import psycopg2
 import json
 
 # instantiate Slack client
-slack_client = SlackClient('xoxb-496361367125-496064509811-caFdS2j2GImXc8nnw6UANl6o')
+slack_client = SlackClient('xoxb-496361367125-496064509811-7bpj0TDMJ2vLLzpBIMAOek5C')
 # starterbot's user ID in Slack: value is assigned after the bot starts up
 starterbot_id = None
 
@@ -180,6 +180,8 @@ def handle_command(command,event):
         )
 
 if __name__ == "__main__":
+
+    
     if slack_client.rtm_connect(with_team_state=True):
         print("Starter Bot connected and running!")
         # Read bot's user ID by calling Web API method `auth.test`
