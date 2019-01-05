@@ -1,6 +1,8 @@
 # slack-bot
 External repository from decide, that include Ortosia-Slack-Bot
 
+Related to pablotabares/decide
+
 Ortosia-SlackBot por Alejandro Monteseirin:
 
 
