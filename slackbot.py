@@ -7,7 +7,7 @@ import psycopg2
 import json
 
 # instantiate Slack client
-slack_client = SlackClient('xoxb-496361367125-496064509811-dBGKFF4NmoztvVkZDyKu2OM6')
+slack_client = SlackClient('xoxb-496361367125-496064509811-rizssDPylaHw34yP9LKV7j8y')
 # starterbot's user ID in Slack: value is assigned after the bot starts up
 starterbot_id = None
 
