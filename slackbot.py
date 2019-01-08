@@ -80,7 +80,7 @@ def login(usurname,password,event):
     slack_client.api_call(
         "chat.postMessage",
         channel=event['channel'],
-        text='logueando'
+        text='logueando...'
     )
     credentials = {}
     credentials["username"] = usurname
@@ -136,10 +136,11 @@ def tests(event):
             channel=event['channel'],
             text='van a realizarse los tests unitarios...'
         )
+    #logueo positivo
     slack_client.api_call(
         "chat.postMessage",
         channel=event['channel'],
-        text='Realizando test de logueo, usuario root password root1234'
+        text='Realizando test positivo de logueo, usuario root password root1234'
     )
     if(login('root','root1234',event)):
         slack_client.api_call(
@@ -155,11 +156,31 @@ def tests(event):
         text='Test de logueo erroneo'
         )
         testFallados+=1
+    #logueo negativo
+    slack_client.api_call(
+        "chat.postMessage",
+        channel=event['channel'],
+        text='Realizando test negativo de logueo, usuario esteusuarionoexiste password aprobado'
+    )
+    if(not login('esteusuarionoexiste','aprobado',event)):
+        slack_client.api_call(
+        "chat.postMessage",
+        channel=event['channel'],
+        text='Test de logueo negativo satisfactorio'
+        )
+        testSuperados+=1
+    else:
+        slack_client.api_call(
+        "chat.postMessage",
+        channel=event['channel'],
+        text='Test de logueo negativo erroneo'
+        )
+        testFallados+=1
 
     slack_client.api_call(
             "chat.postMessage",
             channel=event['channel'],
-            text='Tests pasados satisfactoriamente! \n resultados finales: \n Tests Superados:'+str(testSuperados)+'\n Tests Fallados:'+str(testFallados),
+            text='Tests pasados satisfactoriamente! \n Resultados finales: \n Tests Superados: '+str(testSuperados)+'\n Tests Fallados: '+str(testFallados),
         )
 
 def handle_command(command,event):
@@ -216,7 +237,8 @@ def handle_command(command,event):
         splited=command.split(" ")
         login(splited[len(splited)-2],splited[len(splited)-1],event)
         responder=False
-    elif command.startswith('Testeate'):
+
+    elif command.startswith('testeate'):
         tests(event)
         response='Tests finalizados'
 
