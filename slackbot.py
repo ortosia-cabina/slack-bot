@@ -85,7 +85,7 @@ def login(usurname,password,event):
     time.sleep(3)
 
     r = requests.post("https://decide-ortosia.herokuapp.com/authentication/login/", credentials)
-    if token not in json.loads(r.text):
+    if 'token' not in json.loads(r.text):
         r="error al loguear compruebe las credenciales!"
         slack_client.api_call(
         "chat.postMessage",
