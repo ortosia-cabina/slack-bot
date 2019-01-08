@@ -18,6 +18,9 @@ RTM_READ_DELAY = 1 # 1 second delay between reading from RTM
 
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
 
+
+
+
 def parse_bot_commands(slack_events):
     """
         Parses a list of events coming from the Slack RTM API to find bot commands.
@@ -124,6 +127,40 @@ def login(usurname,password,event):
         channel=event['channel'],
         text=r
     )
+    return True
+def tests(event):
+    testSuperados=0
+    testFallados=0
+    slack_client.api_call(
+            "chat.postMessage",
+            channel=event['channel'],
+            text='van a realizarse los tests unitarios...'
+        )
+    slack_client.api_call(
+        "chat.postMessage",
+        channel=event['channel'],
+        text='Realizando test de logueo, usuario root password root1234'
+    )
+    if(login('root','root1234',event)):
+        slack_client.api_call(
+        "chat.postMessage",
+        channel=event['channel'],
+        text='Test de logueo satisfactorio'
+        )
+        testSuperados+=1
+    else:
+        slack_client.api_call(
+        "chat.postMessage",
+        channel=event['channel'],
+        text='Test de logueo erroneo'
+        )
+        testFallados+=1
+
+    slack_client.api_call(
+            "chat.postMessage",
+            channel=event['channel'],
+            text='Tests pasados satisfactoriamente! \n resultados finales: \n Tests Superados:'+str(testSuperados)+'\n Tests Fallados:'+str(testFallados),
+        )
 
 def handle_command(command,event):
     """
@@ -137,9 +174,9 @@ def handle_command(command,event):
     # This is  you start to implement more commands!
     if command.startswith('crea votacion'):
         response=create_poll(command,event)
-    if command.startswith('quien soy?'):
+    elif command.startswith('quien soy?'):
         response='tu id de usuario es '+str(event['user'])
-    if  command.startswith('estoy logueado?'):
+    elif  command.startswith('estoy logueado?'):
         conn = psycopg2.connect(dbname='d3i8n8a3vv0nst',
             user='qzxvwbjdcmhnsy',
             password='39cb3668dfac02f210f27e0d813167519ccf63309560bca7f93d2d79be46f308',
@@ -156,7 +193,7 @@ def handle_command(command,event):
         conn.close()
         c.close()
 
-    if  command.startswith('cierrame la sesion'):
+    elif  command.startswith('cierrame la sesion'):
         conn = psycopg2.connect(dbname='d3i8n8a3vv0nst',
             user='qzxvwbjdcmhnsy',
             password='39cb3668dfac02f210f27e0d813167519ccf63309560bca7f93d2d79be46f308',
@@ -170,7 +207,7 @@ def handle_command(command,event):
         c.close()
         response='eliminado usuario '+str(event['user'])+' de la base de datos de ortosiaBot'
 
-    if command.startswith('send'):
+    elif command.startswith('send'):
         if command.endswith('pls'):
             response = "Enviando ayuda! \n \n Listado de comandos: \n @ortosia send help pls, envia el mensaje de ayuda \n @ortosia logueame! [nombre de usuario] [contraseña], inicia sesión la plataforma decide\n@ortosia crea votacion | [titulo] | [descripcion] | [pregunta] | [opciones separadas por comas]: crea la votacion en la plataforma decide, es necesario estar logueado correctamente en la plataforma decide y tener los permisos necesarios \n\n Comandos avanzados(desarrollo): \n @ortosia quien soy?: devuelve el id de usuario \n @ortosia estoy logueado? devuelve el token de autorización de decide en caso estar logueado\n @ortosia cierrame la sesion : cierra la sesion del usuario"
         else:
@@ -179,6 +216,9 @@ def handle_command(command,event):
         splited=command.split(" ")
         login(splited[len(splited)-2],splited[len(splited)-1],event)
         responder=False
+    elif command.startswith('Testeate'):
+        tests(event)
+        response='Tests finalizados'
 
     if (responder==True):
         # Sends the response back to the channel
