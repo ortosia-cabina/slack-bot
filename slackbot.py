@@ -85,7 +85,8 @@ def login(usurname,password,event):
     time.sleep(3)
 
     r = requests.post("https://decide-ortosia.herokuapp.com/authentication/login/", credentials)
-
+    if(len(str(r))<5):
+        r="error al loguear compruebe las credenciales!"
     #BD possgress
     conn = psycopg2.connect(dbname='d3i8n8a3vv0nst',
             user='qzxvwbjdcmhnsy',
