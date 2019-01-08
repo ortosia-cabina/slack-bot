@@ -146,14 +146,14 @@ def tests(event):
         slack_client.api_call(
         "chat.postMessage",
         channel=event['channel'],
-        text='Test de logueo satisfactorio :mano_con_signo_de_aprobación:'
+        text='Test de logueo satisfactorio :+1:'
         )
         testSuperados+=1
     else:
         slack_client.api_call(
         "chat.postMessage",
         channel=event['channel'],
-        text='Test de logueo erroneo :dedo_corazón:'
+        text='Test de logueo erroneo :-1:'
         )
         testFallados+=1
     #logueo negativo
@@ -166,14 +166,14 @@ def tests(event):
         slack_client.api_call(
         "chat.postMessage",
         channel=event['channel'],
-        text='Test de logueo negativo satisfactorio :mano_con_signo_de_aprobación:'
+        text='Test de logueo negativo satisfactorio :+1:'
         )
         testSuperados+=1
     else:
         slack_client.api_call(
         "chat.postMessage",
         channel=event['channel'],
-        text='Test de logueo negativo erroneo :dedo_corazón:'
+        text='Test de logueo negativo erroneo :-1:'
         )
         testFallados+=1
 
