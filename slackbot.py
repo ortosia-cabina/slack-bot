@@ -70,7 +70,7 @@ def create_poll(command,event):
     token=str(response[0][0])
     headers = {"Authorization": "Token " + token}
 
-    r = requests.post("https://decide-ortosia.herokuapp.com/voting/", votacion, headers=headers)
+    r = requests.post("https://decide-ortosia.herokuapp.com/voting/", json=votacion, headers=headers)
     return 'Todo correcto, se ha creado correctamente'
 
 
@@ -182,7 +182,7 @@ def tests(event):
         channel=event['channel'],
         text=':arrow_forward: Realizando test positivo de creacion de encuesta, titulo->Nota milestone, descripción->Votacion sobre la nota de nuestro grupo en la milestone 3,pregunta->Cuanta nota sacaremos en la milestone?,opciones->9,8'
     )
-    if(create_poll('crea votacion |Nota milestone|Votacion sobre la nota de nuestro grupo en la milestone 3|Cuanta nota sacaremos en la milestone?|9,8',event)=='Es necesario estar logueado!'):
+    if(create_poll('crea votacion |Nota milestone|Votacion sobre la nota de nuestro grupo en la milestone 3|Cuanta nota sacaremos en la milestone?|9,8',event)=='Todo correcto, se ha creado correctamente'):
         slack_client.api_call(
             "chat.postMessage",
             channel=event['channel'],
