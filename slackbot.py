@@ -71,7 +71,7 @@ def create_poll(command,event):
     headers = {"Authorization": "Token " + token}
 
     r = requests.post("https://decide-ortosia.herokuapp.com/voting/", votacion, headers=headers)
-    return 'todo correcto, se ha creado correctamente'
+    return 'Todo correcto, se ha creado correctamente'
 
 
 
@@ -134,53 +134,73 @@ def tests(event):
     slack_client.api_call(
             "chat.postMessage",
             channel=event['channel'],
-            text='van a realizarse los tests unitarios...'
+            text='Van a realizarse los tests unitarios un momento por favor... :relaxed:'
         )
-    #logueo positivo
+    #positive login
     slack_client.api_call(
         "chat.postMessage",
         channel=event['channel'],
-        text='Realizando test positivo de logueo, usuario root password root1234'
+        text=':arrow_forward: Realizando test positivo de logueo, usuario root password root1234'
     )
     if(login('root','root1234',event)):
         slack_client.api_call(
         "chat.postMessage",
         channel=event['channel'],
-        text='Test de logueo satisfactorio :+1:'
+        text=':o: Test de logueo satisfactorio :+1:'
         )
         testSuperados+=1
     else:
         slack_client.api_call(
         "chat.postMessage",
         channel=event['channel'],
-        text='Test de logueo erroneo :-1:'
+        text=':x: Test de logueo erroneo  :-1:'
         )
         testFallados+=1
-    #logueo negativo
+    #negative login
     slack_client.api_call(
         "chat.postMessage",
         channel=event['channel'],
-        text='Realizando test negativo de logueo, usuario esteusuarionoexiste password aprobado'
+        text=':arrow_forward: Realizando test negativo de logueo, usuario esteusuarionoexiste password aprobado'
     )
     if(not login('esteusuarionoexiste','aprobado',event)):
         slack_client.api_call(
         "chat.postMessage",
         channel=event['channel'],
-        text='Test de logueo negativo satisfactorio :+1:'
+        text=':o: Test de logueo negativo satisfactorio :+1:'
         )
         testSuperados+=1
     else:
         slack_client.api_call(
         "chat.postMessage",
         channel=event['channel'],
-        text='Test de logueo negativo erroneo :-1:'
+        text=':x: Test de logueo negativo erroneo :-1:'
+        )
+        testFallados+=1
+    #create poll
+    slack_client.api_call(
+        "chat.postMessage",
+        channel=event['channel'],
+        text=':arrow_forward: Realizando test positivo de creacion de encuesta, titulo->Nota milestone, descripción->Votacion sobre la nota de nuestro grupo en la milestone 3,pregunta->Cuanta nota sacaremos en la milestone?,opciones->9,8'
+    )
+    if(create_poll('crea votacion |Nota milestone|Votacion sobre la nota de nuestro grupo en la milestone 3|Cuanta nota sacaremos en la milestone?|9,8',event)=='Es necesario estar logueado!'):
+        slack_client.api_call(
+            "chat.postMessage",
+            channel=event['channel'],
+            text=':o: Test de encuesta satisfactorio :+1:'
+            )
+        testSuperados+=1
+    else:
+        slack_client.api_call(
+        "chat.postMessage",
+        channel=event['channel'],
+        text=':x: Test de encuesta erroneo  :-1:'
         )
         testFallados+=1
 
     slack_client.api_call(
             "chat.postMessage",
             channel=event['channel'],
-            text='Tests finalizados! \n Resultados finales: \n Tests Superados: '+str(testSuperados)+'\n Tests Fallados: '+str(testFallados),
+            text='Tests finalizados! :blush: \n Resultados finales: \n Tests Superados: '+str(testSuperados)+':sparkles: \n Tests Fallados: '+str(testFallados)+':shit:',
         )
 
 def handle_command(command,event):
