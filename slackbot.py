@@ -73,7 +73,19 @@ def create_poll(command,event):
     r = requests.post("https://decide-ortosia.herokuapp.com/voting/", json=votacion, headers=headers)
     return 'Todo correcto, se ha creado correctamente'
 
-
+def cerrarSesion(event):
+    conn = psycopg2.connect(dbname='d3i8n8a3vv0nst',
+            user='qzxvwbjdcmhnsy',
+            password='39cb3668dfac02f210f27e0d813167519ccf63309560bca7f93d2d79be46f308',
+            host='ec2-54-246-85-234.eu-west-1.compute.amazonaws.com',
+            port=5432
+            )
+    c = conn.cursor()
+    c.execute('DELETE FROM userSlack where username=(%s)', [str(event['user'])])
+    conn.commit()
+    conn.close()
+    c.close()
+    return True
 
 def login(usurname,password,event):
     # Sends the response back to the channel
@@ -196,12 +208,37 @@ def tests(event):
         text=':x: Test de encuesta erroneo  :-1:'
         )
         testFallados+=1
+    #cierre de sesión para el test de poll negativa
+    cerrarSesion(event)
+    #test pull negativo
+    slack_client.api_call(
+        "chat.postMessage",
+        channel=event['channel'],
+        text=':arrow_forward: Realizando test negativo de creacion de encuesta, con sesion no iniciada, titulo->Nota milestone, descripción->Votacion sobre la nota de nuestro grupo en la milestone 3,pregunta->Cuanta nota sacaremos en la milestone?,opciones->9,8'
+    )
+    if(create_poll('crea votacion |Nota milestone|Votacion sobre la nota de nuestro grupo en la milestone 3|Cuanta nota sacaremos en la milestone?|9,8',event)=='Todo correcto, se ha creado correctamente'):
+        slack_client.api_call(
+            "chat.postMessage",
+            channel=event['channel'],
+            text=':o: Test de encuesta negativo erroneo :-1:'
+            )
+        testFallados+=1
+    else:
+        slack_client.api_call(
+        "chat.postMessage",
+        channel=event['channel'],
+        text=':x: Test de encuesta negativo postivio erroneo  :+1:'
+        )
+        testSuperados+=1
+        
 
     slack_client.api_call(
             "chat.postMessage",
             channel=event['channel'],
             text='Tests finalizados! :blush: \n Resultados finales: \n Tests Superados: '+str(testSuperados)+':sparkles: \n Tests Fallados: '+str(testFallados)+':shit:',
         )
+    
+    
 
 def handle_command(command,event):
     """
@@ -235,17 +272,7 @@ def handle_command(command,event):
         c.close()
 
     elif  command.startswith('cierrame la sesion'):
-        conn = psycopg2.connect(dbname='d3i8n8a3vv0nst',
-            user='qzxvwbjdcmhnsy',
-            password='39cb3668dfac02f210f27e0d813167519ccf63309560bca7f93d2d79be46f308',
-            host='ec2-54-246-85-234.eu-west-1.compute.amazonaws.com',
-            port=5432
-            )
-        c = conn.cursor()
-        c.execute('DELETE FROM userSlack where username=(%s)', [str(event['user'])])
-        conn.commit()
-        conn.close()
-        c.close()
+        cerrarSesion(event)
         response='eliminado usuario '+str(event['user'])+' de la base de datos de ortosiaBot'
 
     elif command.startswith('send'):
