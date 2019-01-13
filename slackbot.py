@@ -209,25 +209,26 @@ def tests(event):
         )
         testFallados+=1
     #cierre de sesión para el test de poll negativa
+    :large_orange_diamond:
     cerrarSesion(event)
     #test pull negativo
     slack_client.api_call(
         "chat.postMessage",
         channel=event['channel'],
-        text=':arrow_forward: Realizando test negativo de creacion de encuesta, con sesion no iniciada, titulo->Nota milestone, descripción->Votacion sobre la nota de nuestro grupo en la milestone 3,pregunta->Cuanta nota sacaremos en la milestone?,opciones->9,8'
+        text=':arrow_forward: Realizando test negativo de creacion de encuesta, CON SESION NO INICIADA, titulo->Nota milestone, descripción->Votacion sobre la nota de nuestro grupo en la milestone 3,pregunta->Cuanta nota sacaremos en la milestone?,opciones->9,8'
     )
     if(create_poll('crea votacion |Nota milestone|Votacion sobre la nota de nuestro grupo en la milestone 3|Cuanta nota sacaremos en la milestone?|9,8',event)=='Todo correcto, se ha creado correctamente'):
         slack_client.api_call(
             "chat.postMessage",
             channel=event['channel'],
-            text=':o: Test de encuesta negativo erroneo :-1:'
+            text=':x: Test de encuesta negativo erroneo :-1:'
             )
         testFallados+=1
     else:
         slack_client.api_call(
         "chat.postMessage",
         channel=event['channel'],
-        text=':x: Test de encuesta negativo postivio erroneo  :+1:'
+        text=':o: Test de encuesta negativo satisfactorio  :+1:'
         )
         testSuperados+=1
         
@@ -287,7 +288,7 @@ def handle_command(command,event):
 
     elif command.startswith('testeate'):
         tests(event)
-        response='Tests finalizados'
+        response='Tests finalizados, gracias por usar Ortosia-slack-bot :relaxed:'
 
     if (responder==True):
         # Sends the response back to the channel
