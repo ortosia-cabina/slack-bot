@@ -209,7 +209,11 @@ def tests(event):
         )
         testFallados+=1
     #cierre de sesión para el test de poll negativa
-    :large_orange_diamond:
+     slack_client.api_call(
+        "chat.postMessage",
+        channel=event['channel'],
+        text=':large_orange_diamond: Cerrando sesion para el test negativo de encuesta'
+    )
     cerrarSesion(event)
     #test pull negativo
     slack_client.api_call(
